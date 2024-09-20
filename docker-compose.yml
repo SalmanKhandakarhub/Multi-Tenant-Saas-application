@@ -1,0 +1,69 @@
+version: '3.10'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6378:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ft
+
+  webapp:
+    container_name: webapp_container
+    image: webapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:ows1234@db/new_rinku
+    depends_on:
+      - db
+    networks:
+      - ft
+
+  db:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      - POSTGRES_DB=new_rinku
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ows1234
+    ports:
+      - "5431:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ft
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@pitangent.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - ft
+
+networks:
+  ft:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin:
+  redis_data:
