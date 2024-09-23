@@ -24,7 +24,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql+psycopg2://postgres:ows1234@db/new_rinku
+      - DATABASE_URL=postgresql+psycopg2://postgres:ows1234@db/saas_db
     depends_on:
       - db
     networks:
@@ -34,7 +34,7 @@ services:
     container_name: postgres_container
     image: postgres
     environment:
-      - POSTGRES_DB=new_rinku
+      - POSTGRES_DB=saas_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=ows1234
     ports:
