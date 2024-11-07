@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    
+    stages {
+        
+        stage('Git pull & Verify') {
+            steps {
+                // Pull the code from the 'develop' branch
+                git branch: 'develop', credentialsId: 'bitbuc', url: 'https://openweb_dev@bitbucket.org/intellexio/rinku_python.git'
+                
+                // List the contents to verify the code pull
+                sh 'ls -alF'
+            }
+        }
+        
+        stage('Copy to project') {
+            steps {
+                // Copy files to the project directory
+                sh 'cp -rf . /var/www/phpfw/rinku_python/'
+            }
+        }
+        
+        stage('Build Docker') {
+            steps {
+                // Change the directory to the project folder
+                dir('/var/www/phpfw/rinku_python') {
+                    // Build and start the Docker containers using the production Compose file
+                    sh 'sudo docker-compose -f docker-compose-prod.yml up -d --build'
+                    
+                    // Print the current working directory (for debugging purposes)
+                    sh 'pwd'
+                }
+            }
+        }
+    }
+    
+
+}

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "rinku-app"
+version = "0.1.0"
+description = ""
+authors = ["Afsar Gayen <afsar@pitangent.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["standard"], version = "^0.114.2"}
+pydantic-settings = "^2.5.2"
+SQLAlchemy = "^2.0.35"
+alembic = "^1.13.2"
+psycopg = "^3.2.2"
+psycopg2 = "^2.9.6" 
+passlib = "^1.7.4"
+python-jose = "^3.3.0"
+celery = "^5.2.7"
+redis = "^4.3.4"
+watchdog = "^3.0"  
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

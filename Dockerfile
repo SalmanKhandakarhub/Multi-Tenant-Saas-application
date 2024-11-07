@@ -2,17 +2,23 @@ FROM python:3.10
 
 WORKDIR /app
 
-# ENV TZ = Asia/Kolkata
+# Install Poetry
+RUN pip install --no-cache-dir poetry
 
-COPY .env /app/
+# Copy pyproject.toml and poetry.lock files
+COPY pyproject.toml poetry.lock* ./
 
-COPY requirements.txt .
+# Regenerate the poetry.lock file to reflect changes in pyproject.toml
+RUN poetry lock --no-update
 
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-    
+# Install dependencies
+RUN poetry install --only main --no-root
+
+# Copy the application code
 COPY . .
 
-EXPOSE 8000
+# Ensure Python finds the 'src' module
+ENV PYTHONPATH=/app/src
 
-CMD [ "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Set the entry point for the container
+CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8019", "--reload"]
